@@ -96,6 +96,7 @@
     "fValuePrecision": "设置精度的浮点数",
     "dValue": "宽浮点数",
     "i64Value": "64位整数",
+    "i64ValueBig": "64位整数(大)",
     "progressValue": "以进度条展示的数值",
     "trackableDoubleValue": "以滑动条展示的数值",
     "trackableIntValue": "可拖动整型",
@@ -106,6 +107,7 @@
     "enumList": "枚举数组",
     "Vec3List": "三维向量数组",
     "AvaloniaBanner": "Avalonia标识",
+    "ImageList": "图像列表",
     "RedColor": "红色",
     "Color2": "颜色",
     "ColorList": "颜色数组",
@@ -143,5 +145,6 @@
     "CategoryOrder": "分类顺序",
     "PropertyOrder": "属性顺序",
     "User Home": "用户主页",
-    "My Pictures": "我的图片"
+    "My Pictures": "我的图片",
+    "AutoCollapse": "自动折叠"
 }

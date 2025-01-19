@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using Avalonia.Controls;
+using Avalonia.PropertyGrid.Utils;
 using PropertyModels.ComponentModel;
 using PropertyModels.Extensions;
 
@@ -123,14 +124,9 @@ namespace Avalonia.PropertyGrid.Controls.Factories.Builtins
 
             if (control is NumericUpDown nup)
             {
-                if(decimal.TryParse(((double)Convert.ChangeType(propertyDescriptor.GetValue(target)!, typeof(double))).ToString(CultureInfo.InvariantCulture), out var d))
-                {
-                    nup.Value = d;
-                }
-                else
-                {
-                    nup.Value = null;
-                }
+                var value = propertyDescriptor.GetValue(target)!;
+
+                nup.Value = DecimalConvertUtils.ConvertTo(value);
 
                 return true;
             }

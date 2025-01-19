@@ -15,6 +15,7 @@ using System.Runtime.Serialization;
 
 namespace Avalonia.PropertyGrid.Samples.Models
 {
+    [AutoCollapseCategories("AutoCollapse")]
     public class SimpleObject : ReactiveObject
     {
         public readonly string Description;
@@ -27,6 +28,15 @@ namespace Avalonia.PropertyGrid.Samples.Models
             {
                 AvaloniaBanner = new Avalonia.Media.Imaging.Bitmap(stream);
             }
+
+            foreach(var name in new string[] {"au.png", "bl.png", "ca.png", "cn.png"})
+            {
+                using (var stream = AssetLoader.Open(new Uri($"avares://{GetType().Assembly.GetName().Name}/Assets/country-flags/{name}")))
+                {
+                    var image = new Avalonia.Media.Imaging.Bitmap(stream);
+                    ImageList.Add(image);
+                }
+            }
         }
 
         public override string ToString()
@@ -35,7 +45,11 @@ namespace Avalonia.PropertyGrid.Samples.Models
         }
 
         [Category("Imaging")]
-        public Avalonia.Media.IImage AvaloniaBanner { get; set; }
+        public IImage AvaloniaBanner { get; set; }
+
+        [Category("Imaging")]
+        [ImagePreviewMode(Stretch = StretchType.None)]
+        public BindingList<IImage> ImageList { get; set; } = new BindingList<IImage>();
 
         [Category("Path")]
         [DisplayName("Target Path")]
@@ -86,11 +100,20 @@ namespace Avalonia.PropertyGrid.Samples.Models
         [Category("Enum")]
         public PhoneService Service { get; set; } = PhoneService.None;
 
+
+        [Category("Enum")]
+        [EnumPermitValues<PhoneService>(PhoneService.Cell, PhoneService.Fax)]
+        public PhoneService ServiceAllowCellFax { get; set; } = PhoneService.None;
+
         [Category("Enum")]
         public PlatformID CurrentPlatform => Environment.OSVersion.Platform;
 
         [Category("Enum")]
         public PlatformID Platform { get; set; } = Environment.OSVersion.Platform;
+
+        [Category("Enum")]
+        [EnumProhibitValues<PlatformID>(PlatformID.Unix)]
+        public PlatformID PlatformNoUnix { get; set; } = Environment.OSVersion.Platform;
 
         [Category("Enum")]
         public PlatformType EnumWithDisplayName { get; set; } = PlatformType.Windows;
@@ -155,6 +178,9 @@ namespace Avalonia.PropertyGrid.Samples.Models
 
         [Category("Numeric")]
         public Int64 i64Value { get; set; } = 1000000000;
+
+        [Category("Numeric")]
+        public Int64 i64ValueBig { get; set; } = 583792581039233983;
 
         [Category("Numeric")]
         [ProgressAttribute]
@@ -306,6 +332,10 @@ namespace Avalonia.PropertyGrid.Samples.Models
         [ReadOnly(true)]
         [TypeConverter(typeof(ExpandableObjectConverter))]        
         public LoginInfo ReadonlyLoginInfo { get; set; } = new LoginInfo();
+
+        [Category("AutoCollapse")]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        public LoginInfo CollapsedLoginInfo { get; set; } = new LoginInfo();
     }
 
     [Flags]
@@ -317,7 +347,10 @@ namespace Avalonia.PropertyGrid.Samples.Models
         Cell = 2,
         Fax = 4,
         Internet = 8,
-        Other = 16
+        Other = 16,
+
+        [EnumExclude]
+        CanNotSeeThis = 32,
     }
 
     public enum PlatformType
@@ -330,7 +363,10 @@ namespace Avalonia.PropertyGrid.Samples.Models
         Ios,
 
         [EnumDisplayName("Unknown.Other")]
-        Other
+        Other,
+
+        [EnumExclude]
+        CanNotSeeThis
     }
 
     public class ValidatePlatformAttribute : ValidationAttribute
